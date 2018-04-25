@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./swiper-4.2.0.min.css">
+    <style>
+        *{
+            margin: 0;
+            padding:0;
+        }
+        .swiper-container {
+            width: 100%;
+            height: 450px;
+        }  
+        video{
+            width: 100%;
+            height:100%;
+            position: absolute
+        }
+        /* 完整视频按钮 */
+        .fix_box{
+            width: 150px;
+            height: 54px;
+            box-sizing: border-box;
+            line-height: 54px;
+            color: #fff;
+            text-decoration: none;
+            vertical-align: middle;
+            text-align: center;
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+            background-color: pink;
+            margin:200px auto;
+            cursor: pointer;
+        }
+        /* 完整视频展示 */
+        .full_video_wrap{
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,.1);
+            position: absolute;
+            z-index:9999999999;
+            display: none;
+        }
+
+        /* 完整视频关闭 */
+        .close_wrp{
+            width: 28px;
+            height: 28px;
+            margin-top: 8.5%;
+            margin-left: 80%;
+            cursor: pointer;
+        }
+        .video_close{
+            width:0.1em;
+            height:1.5em;
+            background: #333;
+            transform: rotate(45deg);
+            display: inline-block;
+            position: relative;
+            /* margin-top: 8.5%;
+            margin-left: 80%; */
+            margin-left: 13px;
+            cursor: pointer;
+        }
+        .video_close::after{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width:0.1em;
+            height:1.5em;
+            background: #333;
+            transform: rotate(270deg);
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+   <div>
+        <!-- 完整视频展示 -->
+        <div class="full_video_wrap">
+            <video style="width:78%;height:70%;margin:8.5% auto;margin-left:10%;" autoplay loop>
+                <source src="video2.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+            <div class="close_wrp">
+                <span class="video_close"></span>
+            </div>
+            <!-- <span class="video_close"></span> -->
+        </div>
+
+        <!-- 轮播 -->
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                        <!-- controls="controls" 加上及显示视频进度了 -->
+                    <video id="video_swiper" class="video" autoplay loop> 
+                        <!-- <source src="http://www.w3school.com.cn/i/movie.mp4" type="video/mp4" /> -->
+                        <source src="video2.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                    <div id="fix_box" class="fix_box">
+                        <p>完整视频</p>
+                    </div>
+                    
+                </div>
+                <div class="swiper-slide">
+                    <img src="./1.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./2.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./1.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                    <img src="./2.jpg" alt="">
+                </div>
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+                
+            <!-- 如果需要导航按钮 -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+                
+            <!-- 如果需要滚动条 -->
+            <!-- <div class="swiper-scrollbar"></div> -->
+        </div>
+
+        
+   </div>
+    
+</body>
+<script src="./swiper-4.2.0.min.js"></script>
+<script src="./jquery-3.2.1.js"></script>
+<script>
+    var mySwiper = new Swiper ('.swiper-container', {
+        direction: 'horizontal',
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        // 如果需要分页器
+        pagination: {
+        el: '.swiper-pagination',
+        clickable: true
+        },
+    
+        // 如果需要前进后退按钮
+        navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+        },
+    
+        // 如果需要滚动条
+        scrollbar: {
+        el: '.swiper-scrollbar',
+        },
+    });        
+
+    // 鼠标移入移出控制轮播是否播放   
+     $('.fix_box').on('mouseover',function(){
+        console.log('鼠标移入');
+        mySwiper.autoplay.stop();
+    }).mouseleave(function(){
+        console.log('鼠标移出');
+        mySwiper.autoplay.start();
+    })
+
+    //   点击查看完整视频
+    var myVideo = document.querySelector('#video_swiper');
+    console.log(myVideo);
+    $('#fix_box').on('click',function(){
+        $('.full_video_wrap').show();
+        mySwiper.autoplay.stop();
+        var myVideo = document.getElementsByTagName('video')[1];myVideo.pause();
+    })
+
+    // 关闭完整视频
+    $('.close_wrp').on('click',function(){
+        $('.full_video_wrap').hide();
+        mySwiper.autoplay.start();
+        var myVideo = document.getElementsByTagName('video')[1];myVideo.play();
+    })
+
+
+
+    $.ajax({
+        type:'get',
+        url: 'http://192.168.1.107/task/public/api/articles/1',
+        dataType:'json',
+        success: function(data){
+            console.log(data);
+        },
+        error: function(err){
+            console.log(err);
+        }
+    })
+
+
+
+
+
+</script>
+</html>
